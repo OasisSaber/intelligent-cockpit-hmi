@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 2,
+  "contractVersion": 1,
+  "id": "TASK-0003",
+  "title": "仪表盘任务卡按稳定编号去重",
+  "lifecycle": "DRAFT",
+  "riskLevel": "L1",
+  "authority": "DELEGATABLE",
+  "executor": "opencode",
+  "model": "deepseek/deepseek-v4-flash",
+  "base": {
+    "locked": false,
+    "changeId": null,
+    "commitId": null
+  },
+  "approval": {
+    "status": "PENDING",
+    "approvedBy": null,
+    "approvedAt": null,
+    "contractHash": null
+  },
+  "budget": {
+    "maxRuntimeMinutes": 15,
+    "maxInputTokens": 40000,
+    "maxOutputTokens": 8000,
+    "maxCost": 0.5,
+    "maxCorrectionCycles": 1
+  },
+  "scope": {
+    "inputPaths": [
+      "AGENTS.md",
+      "apps/agent-dashboard/AGENTS.md",
+      "apps/agent-dashboard/server.mjs",
+      "apps/agent-dashboard/tests/dashboard.test.mjs",
+      "orchestration/tasks/TASK-0002.json",
+      "orchestration/drafts/TASK-0002.json",
+      "orchestration/runtime/tasks/TASK-0002.json"
+    ],
+    "allowedPaths": [
+      "apps/agent-dashboard/server.mjs",
+      "apps/agent-dashboard/tests/dashboard.test.mjs",
+      ".opencode-subagent/results/TASK-0003.md"
+    ]
+  },
+  "requirements": [
+    "Deduplicate dashboard task cards by stable task id before returning the read-only status model.",
+    "When a formal contract and its PROMOTED draft share an id, retain the formal contract and merge its runtime state; do not render the promoted draft as a second task.",
+    "Keep a draft visible when no formal contract with the same id exists, and preserve existing corrupt/missing JSON degradation and path-boundary behavior.",
+    "Add deterministic tests covering formal-plus-promoted-draft precedence, draft-only visibility, runtime merge, and the absence of duplicate ids.",
+    "Do not modify task contracts, drafts, runtime files, dependency manifests, lockfiles, or project status data. Do not add dependencies or change the dashboard's read-only behavior."
+  ],
+  "verificationCommands": [
+    {
+      "executable": "pnpm",
+      "args": [
+        "--filter",
+        "@cockpit/agent-dashboard",
+        "check"
+      ],
+      "timeoutSeconds": 120
+    }
+  ],
+  "resultPath": ".opencode-subagent/results/TASK-0003.md"
+}
